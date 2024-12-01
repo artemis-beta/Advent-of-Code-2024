@@ -7,7 +7,9 @@ jobs:
         name: Test AOC24
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4        
+            - uses: actions/checkout@v4
+              with:
+                  submodules: true
 
             - name: Checkout Logging submodule
               run: git submodule update --init --recursive
