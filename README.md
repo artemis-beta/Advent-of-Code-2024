@@ -1,4 +1,5 @@
 # Advent of Code 2024
+[![Advent of Code 2024](https://github.com/artemis-beta/Advent-of-Code-2024/actions/workflows/build_test.yaml/badge.svg)](https://github.com/artemis-beta/Advent-of-Code-2024/actions/workflows/build_test.yaml)
 
 This repository contains solutions to the challenges set as part of the [Advent of Code 2024](https://adventofcode.com/2024).
 The solutions have been created in the C++ programming language as a library.
