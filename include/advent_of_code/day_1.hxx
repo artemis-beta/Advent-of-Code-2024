@@ -23,7 +23,7 @@
 
 #include "spdlog/spdlog.h"
 
-namespace AdventOfCode::Day1 {
+namespace AdventOfCode24::Day1 {
   typedef std::pair<std::vector<int>, std::vector<int>> file_data;
 
   /**

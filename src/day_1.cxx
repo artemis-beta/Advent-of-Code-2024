@@ -1,8 +1,6 @@
 #include "advent_of_code/day_1.hxx"
-#include <algorithm>
-#include <unordered_map>
 
-namespace AdventOfCode::Day1 {
+namespace AdventOfCode24::Day1 {
   std::optional<file_data> read_data(const std::filesystem::path& input) {
 
     // Attempt to read file, if the read fails return null object
@@ -19,7 +17,7 @@ namespace AdventOfCode::Day1 {
     std::string element;
 
     while (std::getline(read_in, line)) {
-      std::istringstream stream(line);
+      std::istringstream stream(line, std::ios::in);
 
       // Whether to assign to the first or second vector
       bool is_first_col{true};
