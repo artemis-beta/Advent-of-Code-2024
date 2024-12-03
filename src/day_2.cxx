@@ -1,6 +1,6 @@
 #include "advent_of_code/day_2.hxx"
 #include "spdlog/spdlog.h"
-#include <string>
+#include <optional>
 
 namespace AdventOfCode24::Day2 {
     bool safe_pair(int val_1, int val_2, int direction) {
@@ -26,7 +26,7 @@ namespace AdventOfCode24::Day2 {
         return true;
     }
 
-    int check_intervals(const std::vector<int>& numbers) {
+    std::optional<int> check_intervals(const std::vector<int>& numbers) {
         std::vector<int> directions(numbers.size() - 1);
 
         std::transform(
@@ -45,27 +45,31 @@ namespace AdventOfCode24::Day2 {
 
         spdlog::debug("\t- Overall direction is " + std::string((overall_dir < 0) ? "Negative" : "Positive"));
 
-        if(!overall_dir) {
+        if(overall_dir == 0) {
             spdlog::debug("\t- All intervals failed with value 0");
-            return overall_dir;
+            return {};
         }
 
         const int differences = std::count_if(
             directions.begin(), 
             directions.end(), 
             [&overall_dir](int x){
-                const bool x_forward{x < 0};
-                const bool overall_dir_forward{overall_dir < 0};
-                if(x_forward != overall_dir_forward) {
-                    spdlog::debug("\t- Mismatch in direction between interval " + std::to_string(x) + " and direction " + std::to_string(overall_dir_forward));
+                if(x == 0) {
+                    spdlog::debug("\t- Interval of zero found. ");
+                    return true;
                 }
-                return x_forward != overall_dir_forward;
+                const int x_vec{x / std::abs(x)};
+                const int overall_dir_vec{overall_dir / std::abs(overall_dir)};
+                if(x_vec != overall_dir_vec) {
+                    spdlog::debug("\t- Mismatch in direction between interval " + std::to_string(x) + " and direction " + std::to_string(overall_dir_vec));
+                }
+                return x_vec != overall_dir_vec;
             }
         );
 
         if(differences > 0) {
             spdlog::debug("\t- Intervals failed due to variance in direction.");
-            return 0;
+            return {};
         }
 
         return overall_dir;
@@ -90,27 +94,38 @@ namespace AdventOfCode24::Day2 {
             numbers.push_back(number);
         }
 
-        int interval_check{check_intervals(numbers)};
+        std::optional<int> interval_check{check_intervals(numbers)};
 
-        if(!interval_check && !allow_dampening) return false;
+        if(!interval_check.has_value()) return false;
 
-        const std::optional<int> fail_index{check_report_values(numbers, interval_check)};
+        const std::optional<int> fail_index{check_report_values(numbers, interval_check.value())};
 
-        if(!fail_index.has_value()) return true;
+        if(!fail_index.has_value()) {
+            if(interval_check == 0) return false;
+            return true;
+        }
+
         if(!allow_dampening) return false;
+
+        spdlog::debug("\t* Dampen lower bound");
 
         std::vector<int> dampened_first{numbers.begin(), numbers.end()};
         dampened_first.erase(dampened_first.begin() + fail_index.value() - 1);
         interval_check = check_intervals(dampened_first);
 
-        const std::optional<int> damp_fail_index_first{check_report_values(dampened_first, interval_check)};
-        if(!damp_fail_index_first.has_value()) return true;
+        if(interval_check.has_value()) {
+            const std::optional<int> damp_fail_index_first{check_report_values(dampened_first, interval_check.value())};
+            if(!damp_fail_index_first.has_value()) return true;
+        }
 
+        spdlog::debug("\t* Dampen upper bound");
         std::vector<int> dampened_second{numbers.begin(), numbers.end()};
         dampened_second.erase(dampened_second.begin() + fail_index.value());
         interval_check = check_intervals(dampened_second);
 
-        const std::optional<int> damp_fail_index_second{check_report_values(dampened_second, interval_check)};
+        if(!interval_check.has_value()) return false;
+
+        const std::optional<int> damp_fail_index_second{check_report_values(dampened_second, interval_check.value())};
         if(!damp_fail_index_second.has_value()) return true;
 
         return false;

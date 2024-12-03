@@ -5,10 +5,23 @@
 #include "spdlog/spdlog.h"
 
 #include <filesystem>
+#include <sstream>
 
 #ifndef ADVENT_OF_CODE_DATA
   #error "ADVENT_OF_CODE_DATA is not defined!"
 #endif
+
+TEST(TestAOC, TestDay2pt2_fail_scenario_1) {
+    spdlog::set_level(spdlog::level::debug);
+    std::istringstream sstr(std::string("90 89 91 93 95 94"), std::ios::in);
+    ASSERT_FALSE(AdventOfCode24::Day2::report_is_safe(sstr, true));
+}
+
+TEST(TestAOC, TestDay2pt2_fail_scenario_2) {
+    spdlog::set_level(spdlog::level::debug);
+    std::istringstream sstr(std::string("1 1 1 1 1"), std::ios::in);
+    ASSERT_FALSE(AdventOfCode24::Day2::report_is_safe(sstr, true));
+}
 
 TEST(TestAOC, TestDay2pt1_file1) {
     spdlog::set_level(spdlog::level::debug);
@@ -29,11 +42,11 @@ TEST(TestAOC, TestDay2pt1_file2) {
 
     const std::vector<bool> layer_safety = AdventOfCode24::Day2::check_reactor_safety(input_file, true);
 
-    ASSERT_EQ(layer_safety.size(), 25);
+    ASSERT_EQ(layer_safety.size(), 27);
 
     const int n_safe = std::count_if(layer_safety.begin(), layer_safety.end(), [](bool x){return x;});
 
-    ASSERT_EQ(n_safe, 24);
+    ASSERT_EQ(n_safe, 25);
 }
 
 TEST(TestAOC, TestDay2pt2) {
