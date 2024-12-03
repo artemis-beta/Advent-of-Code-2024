@@ -10,6 +10,7 @@
 #include <numeric>
 #include <vector>
 #include <algorithm>
+#include <iterator>
 
 #include "spdlog/spdlog.h"
 

@@ -1,12 +1,5 @@
 #include "advent_of_code/day_2.hxx"
-#include "spdlog/spdlog.h"
-#include <algorithm>
-#include <cstdlib>
-#include <iostream>
-#include <iterator>
-#include <optional>
-#include <stdexcept>
-#include <string>
+
 
 namespace AdventOfCode24::Day2 {
     std::vector<int> read_line(std::istringstream& line) {
@@ -74,11 +67,6 @@ namespace AdventOfCode24::Day2 {
             spdlog::warn("No general direction found.");
             return false;
         }
-
-        for(auto& n : values) {
-            std::cout << n << ",";
-        }
-        std::cout << std::endl;
 
         auto invalid_number_iter{check_numbers(values, general_trend)};
 
