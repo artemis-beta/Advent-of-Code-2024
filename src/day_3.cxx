@@ -1,4 +1,5 @@
 #include "advent_of_code/day_3.hxx"
+#include <string>
 
 namespace AdventOfCode24::Day3 {
     bool use_calculation(int operation_index, logic_set logic_indexes, const bool& current_state) {
@@ -17,6 +18,11 @@ namespace AdventOfCode24::Day3 {
         // If we have not yet encountered any logic statements leave as existing
         if(last_do_before_val == logic_indexes.first.rend() && last_dont_before_val == logic_indexes.second.rend()) return current_state;
 
+        // Else return whichever is not at the end if only one is
+        if(last_do_before_val == logic_indexes.first.rend()) return false;
+        if(last_dont_before_val == logic_indexes.second.rend()) return true;
+
+        // Else compare the two
         return (*last_do_before_val) > (*last_dont_before_val);
     }
     logic_set get_logic_indexes(const std::string& line) {
@@ -50,10 +56,8 @@ namespace AdventOfCode24::Day3 {
 
         const std::regex find_valid_mul_statements{"mul\\(-?\\d+,-?\\d+\\)"};
         const std::regex find_numbers{"-?\\d+"};
-
         auto results_begin{std::sregex_iterator(line.begin(), line.end(), find_valid_mul_statements)};
         auto results_end {std::sregex_iterator()};
-
         std::optional<std::pair<std::vector<int>, std::vector<int>>> logic_indexes = {};
         
         if(logic_enabled) logic_indexes = get_logic_indexes(line);
@@ -67,7 +71,8 @@ namespace AdventOfCode24::Day3 {
             auto numbers_end {std::sregex_iterator()};
 
             std::pair<int, int> arguments{-1000, -1000};
-            const size_t match_position = std::distance(line.begin(), line.begin() + match.position());
+
+            const size_t match_position = match.position();
 
             for(std::sregex_iterator n_iter{numbers_begin}; n_iter != numbers_end; ++n_iter) {
                 const std::smatch n_match{*n_iter};
@@ -86,7 +91,7 @@ namespace AdventOfCode24::Day3 {
 
             bool state_result{do_state};
             
-            if(logic_enabled) state_result = use_calculation(match_position, logic_indexes.value(), do_state);
+            if(logic_indexes.has_value()) state_result = use_calculation(match_position, logic_indexes.value(), do_state);
 
             if(!logic_enabled || state_result) operations.push_back(arguments);
 
@@ -105,7 +110,6 @@ namespace AdventOfCode24::Day3 {
 
         while (std::getline(read_in, line)) {
             const std::vector<std::pair<int, int>> line_calculations{parse_line(line, logic_enabled, do_state)};
-
             const int line_total = std::accumulate(
                 line_calculations.begin(), 
                 line_calculations.end(), 

@@ -19,7 +19,7 @@ TEST(TestAOC, TestDay2pt1_trend) {
     std::istringstream sstr;
     sstr.str(line);
     const std::vector<int> values{read_line(sstr)};
-    const std::vector<int> trend{values};
+    const std::vector<int> trend{level_trend(values)};
     const std::vector<int> expected{1, 2, 3, -4, 4, -5, -1};
 
     ASSERT_EQ(expected.size(), trend.size());
