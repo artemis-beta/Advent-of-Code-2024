@@ -23,7 +23,7 @@ then use this library and are found in `solutions/`. The project is carried out 
 Firstly clone this repository ensuring all sub-modules are cloned also:
 
 ```sh
-git clone --recurse-submodules https://github.com/artemis-beta/Advent-of-Code-2023.git
+git clone --recurse-submodules https://github.com/artemis-beta/Advent-of-Code-2024.git
 ```
 
 You will need CMake, note also that the project assumes C++23 is available:
