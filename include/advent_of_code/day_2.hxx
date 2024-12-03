@@ -14,8 +14,9 @@
 #include "spdlog/spdlog.h"
 
 namespace AdventOfCode24::Day2 {
-    bool safe_pair(int val_1, int val_2, int direction);
-    std::optional<int> check_intervals(const std::vector<int>& numbers);
-    bool report_is_safe(std::istringstream& line, bool allow_dampening);
+    std::vector<int> level_trend(const std::vector<int>& values);
+    std::vector<int> read_line(std::istringstream& line);
+    bool level_trend_is_valid(const std::vector<int>& values, bool problem_dampening);
+    bool check_numbers(const std::vector<int>& values);
     std::vector<bool> check_reactor_safety(const std::filesystem::path& input_file, bool problem_dampening);
 };

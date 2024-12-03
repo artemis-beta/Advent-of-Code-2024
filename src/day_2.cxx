@@ -1,138 +1,114 @@
 #include "advent_of_code/day_2.hxx"
 #include "spdlog/spdlog.h"
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <iterator>
 #include <optional>
+#include <stdexcept>
+#include <string>
 
 namespace AdventOfCode24::Day2 {
-    bool safe_pair(int val_1, int val_2, int direction) {
-        if(val_1 < 0) return true;
+    std::vector<int> read_line(std::istringstream& line) {
+        std::vector<int> line_vals;
+        int number{-1000};
 
-        const int interval{val_2 - val_1};
-        const int abs_interval{std::abs(interval)};
-
-        if(abs_interval > 3 || abs_interval < 1) {
-            spdlog::debug("\t- Value " + std::to_string(val_2) + " failed due to interval " + std::to_string(abs_interval));
-            return false;
+        while(line >> number) {
+            line_vals.push_back(number);
         }
-
-        if(direction > 0 && interval <= 0) {
-            spdlog::debug("\t- Value " + std::to_string(val_2) + " failed due to interval " + std::to_string(interval) + " in positive flow");
-	        return false;
-	    }
-        else if(direction < 0 && interval >= 0) {
-            spdlog::debug("\t- Value " + std::to_string(val_2) + " failed due to interval " + std::to_string(interval) + " in negative flow");
-            return false;
-	    }
-
-        return true;
+        return line_vals;
     }
 
-    std::optional<int> check_intervals(const std::vector<int>& numbers) {
-        std::vector<int> directions(numbers.size() - 1);
+    std::vector<int> level_trend(const std::vector<int>& values) {
+        std::vector<int> trend(values.size() - 1, -1000);
 
         std::transform(
-            numbers.begin(),
-            numbers.end() - 1,
-            numbers.begin() + 1,
-            directions.begin(),
-            [](int a, int b) {
-                if(b > a) return 1;
-                if(b == a) return 0;
-                return -1;
+            values.begin(),
+            values.end() - 1,
+            values.begin() + 1,
+            trend.begin(),
+            [](int lower, int upper){
+                return upper - lower;
             }
         );
 
-        const int overall_dir = std::accumulate(directions.begin(), directions.end(), 0);
+        return trend;
+    }
 
-        spdlog::debug("\t- Overall direction is " + std::string((overall_dir < 0) ? "Negative" : "Positive"));
-
-        if(overall_dir == 0) {
-            spdlog::debug("\t- All intervals failed with value 0");
-            return {};
-        }
-
-        const int differences = std::count_if(
-            directions.begin(), 
-            directions.end(), 
-            [&overall_dir](int x){
-                if(x == 0) {
-                    spdlog::debug("\t- Interval of zero found. ");
+    auto check_numbers(const std::vector<int>& values, const int& overall_trend) {
+        return std::adjacent_find(
+            values.begin(),
+            values.end(),
+            [&overall_trend](int a, int b) {
+                if(a == b || std::abs(a - b) > 3 || std::abs(a - b) < 1){
+                    spdlog::warn("Invalid interval of size " + std::to_string(a - b));
                     return true;
                 }
-                const int x_vec{x / std::abs(x)};
-                const int overall_dir_vec{overall_dir / std::abs(overall_dir)};
-                if(x_vec != overall_dir_vec) {
-                    spdlog::debug("\t- Mismatch in direction between interval " + std::to_string(x) + " and direction " + std::to_string(overall_dir_vec));
+                if((overall_trend > 0 && a > b) || (overall_trend < 0 && a < b)) {
+                    spdlog::warn("Interval of [" + std::to_string(a) + "," + std::to_string(b) + "] does not match " + ((overall_trend < 0) ? "negative" : "positive") + " trend");
+                    return true;
                 }
-                return x_vec != overall_dir_vec;
+                return false;
             }
         );
 
-        if(differences > 0) {
-            spdlog::debug("\t- Intervals failed due to variance in direction.");
-            return {};
-        }
-
-        return overall_dir;
     }
 
-    std::optional<int> check_report_values(const std::vector<int>& numbers, int direction) {        
-        for(int i{0}; i < numbers.size() - 1; ++i) {
-            if(!safe_pair(numbers[i], numbers[i+1], direction)) {
-                return i + 1;
+    bool level_trend_is_valid(const std::vector<int>& values, bool problem_dampening) {
+        std::vector<int> trend{level_trend(values)};
+
+        // Determines if numbers are ascending or descending
+        const int general_trend = std::accumulate(
+            trend.begin(),
+            trend.end(),
+            0,
+            [](int prev, int val){
+                if(val > 0) return prev + 1;
+                if(val < 0) return prev - 1;
+                return prev;
             }
+        );
+
+        // If the general trend is zero this is failure
+        if(!general_trend) {
+            spdlog::warn("No general direction found.");
+            return false;
         }
 
-        return {};
-    }
+        for(auto& n : values) {
+            std::cout << n << ",";
+        }
+        std::cout << std::endl;
 
-    bool report_is_safe(std::istringstream& line, bool allow_dampening) {
-        std::vector<int> numbers;
+        auto invalid_number_iter{check_numbers(values, general_trend)};
 
-        int number;
+        // If no results then line is valid
+        if(invalid_number_iter == values.end()) return true;
+        if(!problem_dampening) return false;
 
-        while (line >> number) {
-            numbers.push_back(number);
+        std::vector<int> test_erase_current(values);
+        std::vector<int> test_erase_next(values);
+
+        const int index = std::distance(values.begin(), invalid_number_iter);
+
+        if(index < test_erase_current.size()) {
+            test_erase_current.erase(test_erase_current.begin() + index);
+            const bool current_pass{check_numbers(test_erase_current, general_trend) == test_erase_current.end()};
+            if(current_pass) return true;
         }
 
-        std::optional<int> interval_check{check_intervals(numbers)};
-
-        if(!interval_check.has_value()) return false;
-
-        const std::optional<int> fail_index{check_report_values(numbers, interval_check.value())};
-
-        if(!fail_index.has_value()) {
-            if(interval_check == 0) return false;
-            return true;
+        if(index + 1 < test_erase_next.size()) {
+            test_erase_next.erase(test_erase_next.begin() + index + 1);
+            const bool next_pass{check_numbers(test_erase_next, general_trend) == test_erase_next.end()};
+            if(next_pass) return true;
         }
-
-        if(!allow_dampening) return false;
-
-        spdlog::debug("\t* Dampen lower bound");
-
-        std::vector<int> dampened_first{numbers.begin(), numbers.end()};
-        dampened_first.erase(dampened_first.begin() + fail_index.value() - 1);
-        interval_check = check_intervals(dampened_first);
-
-        if(interval_check.has_value()) {
-            const std::optional<int> damp_fail_index_first{check_report_values(dampened_first, interval_check.value())};
-            if(!damp_fail_index_first.has_value()) return true;
-        }
-
-        spdlog::debug("\t* Dampen upper bound");
-        std::vector<int> dampened_second{numbers.begin(), numbers.end()};
-        dampened_second.erase(dampened_second.begin() + fail_index.value());
-        interval_check = check_intervals(dampened_second);
-
-        if(!interval_check.has_value()) return false;
-
-        const std::optional<int> damp_fail_index_second{check_report_values(dampened_second, interval_check.value())};
-        if(!damp_fail_index_second.has_value()) return true;
 
         return false;
     }
 
     std::vector<bool> check_reactor_safety(const std::filesystem::path& input_file, bool problem_dampening) {
         spdlog::info("Problem Damping is " + ((problem_dampening) ? std::string("Enabled") : std::string("Disabled")));
+
         std::vector<bool> safe_reports;
 
         std::ifstream read_in(input_file, std::ios::in);
@@ -141,7 +117,9 @@ namespace AdventOfCode24::Day2 {
         while (std::getline(read_in, line)) {
             spdlog::debug("Processing line " + std::to_string(safe_reports.size()));
             std::istringstream stream(line, std::ios::in);
-            const bool report_status{report_is_safe(stream, problem_dampening)};
+            const std::vector<int> values{read_line(stream)};
+
+            const bool report_status{level_trend_is_valid(values, problem_dampening)};
             safe_reports.push_back(report_status);
             spdlog::debug("Line " + std::string((safe_reports[safe_reports.size() - 1]) ? "Passed" : "Failed"));
         }
@@ -150,4 +128,5 @@ namespace AdventOfCode24::Day2 {
 
         return safe_reports;
     }
+
 };

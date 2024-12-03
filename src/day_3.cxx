@@ -1,7 +1,4 @@
 #include "advent_of_code/day_3.hxx"
-#include <algorithm>
-#include <iterator>
-#include <string>
 
 namespace AdventOfCode24::Day3 {
     bool use_calculation(int operation_index, logic_set logic_indexes, const bool& current_state) {
@@ -17,7 +14,7 @@ namespace AdventOfCode24::Day3 {
             [operation_index](int value){return value < operation_index;}
         );
 
-        // If we have not yet encountered any logic statements enable by default
+        // If we have not yet encountered any logic statements leave as existing
         if(last_do_before_val == logic_indexes.first.rend() && last_dont_before_val == logic_indexes.second.rend()) return current_state;
 
         return (*last_do_before_val) > (*last_dont_before_val);

@@ -6,21 +6,58 @@
 
 #include <filesystem>
 #include <sstream>
+#include <string>
 
 #ifndef ADVENT_OF_CODE_DATA
   #error "ADVENT_OF_CODE_DATA is not defined!"
 #endif
 
-TEST(TestAOC, TestDay2pt2_fail_scenario_1) {
-    spdlog::set_level(spdlog::level::debug);
-    std::istringstream sstr(std::string("90 89 91 93 95 94"), std::ios::in);
-    ASSERT_FALSE(AdventOfCode24::Day2::report_is_safe(sstr, true));
+using namespace AdventOfCode24::Day2;
+
+TEST(TestAOC, TestDay2pt1_trend) {
+    const std::string line("1 2 4 7 3 7 2 1");
+    std::istringstream sstr;
+    sstr.str(line);
+    const std::vector<int> values{read_line(sstr)};
+    const std::vector<int> trend{values};
+    const std::vector<int> expected{1, 2, 3, -4, 4, -5, -1};
+
+    ASSERT_EQ(expected.size(), trend.size());
+
+    for(int i{0}; i < trend.size(); ++i) ASSERT_EQ(trend[i], expected[i]);
 }
 
-TEST(TestAOC, TestDay2pt2_fail_scenario_2) {
-    spdlog::set_level(spdlog::level::debug);
-    std::istringstream sstr(std::string("1 1 1 1 1"), std::ios::in);
-    ASSERT_FALSE(AdventOfCode24::Day2::report_is_safe(sstr, true));
+TEST(TestAOC, TestDay2pt1_invalid) {
+    const std::string line("1 2 4 7 3 7 2 1");
+    std::istringstream sstr;
+    sstr.str(line);
+
+    const std::vector<int> values{read_line(sstr)};
+    const bool layer_safety = AdventOfCode24::Day2::level_trend_is_valid(values, false);
+
+    ASSERT_FALSE(layer_safety);
+}
+
+TEST(TestAOC, TestDay2pt1_valid) {
+    const std::string line("1 3 5 8 9 11 13");
+    std::istringstream sstr;
+    sstr.str(line);
+
+    const std::vector<int> values{read_line(sstr)};
+    const bool layer_safety = AdventOfCode24::Day2::level_trend_is_valid(values, false);
+
+    ASSERT_TRUE(layer_safety);
+}
+
+TEST(TestAOC, TestDay2pt1) {
+    const std::string line("1 2 4 7 3 7 2 1");
+    std::istringstream sstr;
+    sstr.str(line);
+
+    const std::vector<int> values{read_line(sstr)};
+    const bool layer_safety = AdventOfCode24::Day2::level_trend_is_valid(values, false);
+
+    ASSERT_FALSE(layer_safety);
 }
 
 TEST(TestAOC, TestDay2pt1_file1) {
@@ -36,25 +73,49 @@ TEST(TestAOC, TestDay2pt1_file1) {
     ASSERT_EQ(n_safe, 2);
 }
 
-TEST(TestAOC, TestDay2pt1_file2) {
+TEST(TestAOC, TestDay2pt2_file1) {
     spdlog::set_level(spdlog::level::debug);
-    const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_2_2.txt";
 
-    const std::vector<bool> layer_safety = AdventOfCode24::Day2::check_reactor_safety(input_file, true);
+    std::vector<bool> expected{true, false, false, true, true, true};
+    const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_2_1.txt";
+    int index{0};
 
-    ASSERT_EQ(layer_safety.size(), 27);
+    std::ifstream read_in(input_file, std::ios::in);
+    std::string line;
 
-    const int n_safe = std::count_if(layer_safety.begin(), layer_safety.end(), [](bool x){return x;});
+    while (std::getline(read_in, line)) {
+        spdlog::info("Running Line " + std::to_string(index));
+        std::istringstream stream(line, std::ios::in);
 
-    ASSERT_EQ(n_safe, 25);
+        const std::vector<int> values{read_line(stream)};
+        const bool layer_safety = AdventOfCode24::Day2::level_trend_is_valid(values, true);
+
+        ASSERT_EQ(layer_safety, expected[index]);
+
+        index++;
+    }
 }
 
-TEST(TestAOC, TestDay2pt2) {
-    const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_2_1.txt";
+TEST(TestAOC, TestDay2pt2_file2) {
+    spdlog::set_level(spdlog::level::debug);
 
-    const std::vector<bool> layer_safety = AdventOfCode24::Day2::check_reactor_safety(input_file, true);
+    const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_2_2.txt";
+    int index{0};
 
-    const int n_safe = std::count_if(layer_safety.begin(), layer_safety.end(), [](bool x){return x;});
+    std::ifstream read_in(input_file, std::ios::in);
+    std::string line;
 
-    ASSERT_EQ(n_safe, 4);
+    while (std::getline(read_in, line)) {
+        spdlog::info("Running Line " + std::to_string(index));
+        std::istringstream stream(line, std::ios::in);
+
+        const std::vector<int> values{read_line(stream)};
+        const bool layer_safety = AdventOfCode24::Day2::level_trend_is_valid(values, true);
+
+        bool expected = (index > 24) ? false : true;
+
+        ASSERT_EQ(layer_safety, expected);
+
+        index++;
+    }
 }
