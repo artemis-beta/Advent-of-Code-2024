@@ -11,16 +11,7 @@ using namespace AdventOfCode24::Day4;
   #error "ADVENT_OF_CODE_DATA is not defined!"
 #endif
 
-TEST(TestAOC, TestDay4pt1_block_parse) {
-	spdlog::set_level(spdlog::level::debug);
-	const std::string word{"XMAS"};
-	const std::deque<std::string> block{"XMASFVX.", "MMDNTMY.", "AIAWAZV.", "STCSAMX.", "ZNAAALA.", "QMTMMMM.", "XIYXJFX.", "......."};
-	const int n_matches{wordsearch_matches(word, block, 0)};
-
-	ASSERT_EQ(n_matches, 8);
-}
-
-TEST(TestAOC, TestDay4pt1_1) {
+TEST(TestAOC, TestDay4pt1_example) {
   spdlog::set_level(spdlog::level::debug);
   const std::string word{"XMAS"};
   const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_4_1.txt";
@@ -29,8 +20,7 @@ TEST(TestAOC, TestDay4pt1_1) {
   ASSERT_EQ(word_count, 18);
 }
 
-TEST(TestAOC, TestDay4pt2) {
-  spdlog::set_level(spdlog::level::debug);
+TEST(TestAOC, TestDay4pt2_example_1) {
   const std::string word{"MAS"};
   const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_4_1.txt";
   const int word_count{AdventOfCode24::Day4::count_matches_in_file(input_file, word, false)};
@@ -38,12 +28,27 @@ TEST(TestAOC, TestDay4pt2) {
   ASSERT_EQ(word_count, 9);
 }
 
-TEST(TestAOC, TestDay4pt1_2) {
-  spdlog::set_level(spdlog::level::debug);
+TEST(TestAOC, TestDay4pt1_example_2) {
   const std::string word{"XMAS"};
   const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_4_2.txt";
   const int word_count{AdventOfCode24::Day4::count_matches_in_file(input_file, word, true)};
 
   ASSERT_EQ(word_count, 18);
+}
+
+TEST(TestAOC, TestDay4pt1) {
+  const std::string word{"XMAS"};
+  const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_4.txt";
+  const int word_count{AdventOfCode24::Day4::count_matches_in_file(input_file, word, true)};
+
+  ASSERT_EQ(word_count, 2654);
+}
+
+TEST(TestAOC, TestDay4pt2) {
+  const std::string word{"MAS"};
+  const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_4.txt";
+  const int word_count{AdventOfCode24::Day4::count_matches_in_file(input_file, word, false)};
+
+  ASSERT_EQ(word_count, 1990);
 }
 

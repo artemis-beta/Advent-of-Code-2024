@@ -49,17 +49,6 @@ TEST(TestAOC, TestDay2pt1_valid) {
     ASSERT_TRUE(layer_safety);
 }
 
-TEST(TestAOC, TestDay2pt1) {
-    const std::string line("1 2 4 7 3 7 2 1");
-    std::istringstream sstr;
-    sstr.str(line);
-
-    const std::vector<int> values{read_line(sstr)};
-    const bool layer_safety = AdventOfCode24::Day2::level_trend_is_valid(values, false);
-
-    ASSERT_FALSE(layer_safety);
-}
-
 TEST(TestAOC, TestDay2pt1_file1) {
     spdlog::set_level(spdlog::level::debug);
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_2_1.txt";
@@ -71,6 +60,19 @@ TEST(TestAOC, TestDay2pt1_file1) {
     const int n_safe = std::count_if(layer_safety.begin(), layer_safety.end(), [](bool x){return x;});
 
     ASSERT_EQ(n_safe, 2);
+}
+
+TEST(TestAOC, TestDay2pt1) {
+    spdlog::set_level(spdlog::level::debug);
+    const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_2.txt";
+
+    const std::vector<bool> layer_safety = AdventOfCode24::Day2::check_reactor_safety(input_file, false);
+
+    ASSERT_EQ(layer_safety.size(), 1000);
+
+    const int n_safe = std::count_if(layer_safety.begin(), layer_safety.end(), [](bool x){return x;});
+
+    ASSERT_EQ(n_safe, 402);
 }
 
 TEST(TestAOC, TestDay2pt2_file1) {
@@ -118,4 +120,29 @@ TEST(TestAOC, TestDay2pt2_file2) {
 
         index++;
     }
+}
+
+TEST(TestAOC, TestDay2pt2) {
+    spdlog::set_level(spdlog::level::debug);
+
+    std::vector<bool> expected{true, false, false, true, true, true};
+    const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_2.txt";
+    int index{0};
+    int counter{0};
+
+    std::ifstream read_in(input_file, std::ios::in);
+    std::string line;
+
+    while (std::getline(read_in, line)) {
+        spdlog::info("Running Line " + std::to_string(index));
+        std::istringstream stream(line, std::ios::in);
+
+        const std::vector<int> values{read_line(stream)};
+        const bool layer_safety = AdventOfCode24::Day2::level_trend_is_valid(values, true);
+
+        if(layer_safety) counter++;
+        index++;
+    }
+
+    ASSERT_EQ(counter, 455);
 }

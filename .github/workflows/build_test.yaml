@@ -32,11 +32,3 @@ jobs:
                     echo "Unit tests failed"
                     exit 1
                 fi
-            - name: Run Day 1 Solution
-              run: ./build/solutions/day_1 solutions/data/day_1.txt
-            - name: Run Day 2 Solution
-              run: ./build/solutions/day_2 solutions/data/day_2.txt
-            - name: Run Day 3 Solution
-              run: ./build/solutions/day_3 solutions/data/day_3.txt
-            - name: Run Day 4 Solution
-              run: ./build/solutions/day_3 solutions/data/day_4.txt

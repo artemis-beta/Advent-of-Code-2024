@@ -24,7 +24,7 @@ TEST(TestAOC, TestDay3pt1_line_parse) {
     ASSERT_EQ(parsed[0].second, 5);
 }
 
-TEST(TestAOC, TestDay3pt1) {
+TEST(TestAOC, TestDay3pt1_example) {
   spdlog::set_level(spdlog::level::debug);
   const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_3_1.txt";
   const std::vector<int> line_totals{AdventOfCode24::Day3::calculate_file_lines(input_file, false)};
@@ -35,7 +35,7 @@ TEST(TestAOC, TestDay3pt1) {
   ASSERT_EQ(overall_total, 161);
 }
 
-TEST(TestAOC, TestDay3pt2) {
+TEST(TestAOC, TestDay3pt2_example) {
   spdlog::set_level(spdlog::level::debug);
   const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_3_2.txt";
   const std::vector<int> line_totals{AdventOfCode24::Day3::calculate_file_lines(input_file, true)};
@@ -44,6 +44,26 @@ TEST(TestAOC, TestDay3pt2) {
 
   ASSERT_EQ(line_totals.size(), 1);
   ASSERT_EQ(overall_total, 48);
+}
+
+TEST(TestAOC, TestDay3pt1) {
+  spdlog::set_level(spdlog::level::debug);
+  const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_3.txt";
+  const std::vector<int> line_totals{AdventOfCode24::Day3::calculate_file_lines(input_file, false)};
+
+  const int overall_total = std::accumulate(line_totals.begin(), line_totals.end(), 0);
+
+  ASSERT_EQ(overall_total, 187833789);
+}
+
+TEST(TestAOC, TestDay3pt2) {
+  spdlog::set_level(spdlog::level::debug);
+  const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" /  "day_3.txt";
+  const std::vector<int> line_totals{AdventOfCode24::Day3::calculate_file_lines(input_file, true)};
+
+  const int overall_total = std::accumulate(line_totals.begin(), line_totals.end(), 0);
+
+  ASSERT_EQ(overall_total, 94455185);
 }
 
 TEST(TestAOC, TestDay3pt2_scenario_1) {
