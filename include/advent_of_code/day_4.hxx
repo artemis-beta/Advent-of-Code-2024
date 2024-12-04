@@ -1,8 +1,16 @@
 #pragma once
 
 #include <fstream>
-#include <vector>
+#include <deque>
+#include <string>
+#include <algorithm>
+#include <filesystem>
 
-namespace AdventOfCode::Day4 {
-	int get_matches(const std::string& word, const std::vector<std::string>& block);
+#include "spdlog/spdlog.h"
+
+namespace AdventOfCode24::Day4 {
+	int wordsearch_matches(const std::string& word, const std::deque<std::string>& block, const int block_index);
+	int x_matches(const std::string& word, const std::deque<std::string>& block, const int block_index);
+	int count_wordsearch_matches_in_file(const std::filesystem::path& input_file, const std::string& word);
+	int count_matches_in_file(const std::filesystem::path& input_file, const std::string& word, bool wordsearch);
 };

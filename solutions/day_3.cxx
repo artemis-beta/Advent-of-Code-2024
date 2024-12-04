@@ -15,6 +15,9 @@ int main(int argc, char** argv) {
     spdlog::set_level(spdlog::level::debug);
 
     const std::filesystem::path input_file{argv[1]};
+    if(!std::filesystem::exists(input_file)) {
+        throw std::runtime_error("File " + input_file.string() + " does not exist!");
+    }
     const std::vector<int> line_totals{calculate_file_lines(input_file, false)};
     const std::vector<int> line_totals_w_logic{calculate_file_lines(input_file, true)};
     const int overall_total = std::accumulate(line_totals.begin(), line_totals.end(), 0);

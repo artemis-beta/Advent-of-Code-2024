@@ -14,6 +14,9 @@ int main(int argc, char** argv) {
     }
 
     const std::filesystem::path input_file{argv[1]};
+    if(!std::filesystem::exists(input_file)) {
+        throw std::runtime_error("File " + input_file.string() + " does not exist!");
+    }
     const std::vector<int> diffs{get_differences(input_file)};
     const std::vector<int> scores{get_similarity_scores(input_file)};
 

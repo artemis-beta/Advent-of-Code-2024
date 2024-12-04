@@ -11,6 +11,9 @@ int main(int argc, char** argv) {
     }
 
     const std::filesystem::path input_file{argv[1]};
+    if(!std::filesystem::exists(input_file)) {
+        throw std::runtime_error("File " + input_file.string() + " does not exist!");
+    }
 
     const std::vector<bool> report_safety = AdventOfCode24::Day2::check_reactor_safety(input_file, false);
     const std::vector<bool> report_safety_dampened = AdventOfCode24::Day2::check_reactor_safety(input_file, true);
