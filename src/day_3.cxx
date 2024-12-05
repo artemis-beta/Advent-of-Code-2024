@@ -1,5 +1,4 @@
 #include "advent_of_code/day_3.hxx"
-#include <string>
 
 namespace AdventOfCode24::Day3 {
     bool use_calculation(int operation_index, logic_set logic_indexes, const bool& current_state) {
