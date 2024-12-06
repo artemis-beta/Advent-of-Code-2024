@@ -195,12 +195,12 @@ namespace AdventOfCode24::Day4 {
 	}
 
 	int count_matches_in_file(const std::filesystem::path& input_file, const std::string& word, bool wordsearch) {
-		std::deque<std::string> lines;
+	std::deque<std::string> lines;
 
         std::ifstream read_in(input_file, std::ios::in);
         std::string line;
-		int line_counter{0};
-		int instance_counter{0};
+	int line_counter{0};
+	int instance_counter{0};
 
         while (std::getline(read_in, line)) {
 			lines.push_back(line);
