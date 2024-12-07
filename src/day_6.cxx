@@ -160,6 +160,7 @@ namespace AdventOfCode24::Day6 {
 		return {ExitStatus::ExitedMap, path};
 	}
 	std::vector<coord> patrol_loop_obstruction_positions(const Map& map) {
+		// FIXME: Inefficiently done due to time constraints
 		std::vector<coord> loopback_obs_positions;
 
 		for(int row{0}; row < map.size.first; ++row) {

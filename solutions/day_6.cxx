@@ -1,8 +1,6 @@
 #include <filesystem>
-#include <numeric>
 #include <string>
 #include <set>
-#include "spdlog/common.h"
 #include "spdlog/spdlog.h"
 
 #include "advent_of_code/day_6.hxx"
