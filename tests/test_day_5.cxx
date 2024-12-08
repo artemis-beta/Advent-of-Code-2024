@@ -14,7 +14,6 @@ using namespace AdventOfCode24::Day5;
 #endif
 
 TEST(TestAOC, TestDay5pt1_parse_rule) {
-    spdlog::set_level(spdlog::level::debug);
     const std::string test_line("34|78");
     const std::optional<std::pair<int, int>> rule{parse_rule(test_line, '|')};
     const std::pair<int, int> expected{34,78};
@@ -40,7 +39,6 @@ TEST(TestAOC, TestDay5pt1_sequence_check_fail) {
 }
 
 TEST(TestAOC, TestDay5pt1_example) {
-    spdlog::set_level(spdlog::level::debug);
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_5_1.txt";
     const std::vector<int> middle_values{process_file(input_file, '|', ',')};
     const std::vector<int> expected{61, 53, 29, 0, 0, 0};
@@ -53,7 +51,6 @@ TEST(TestAOC, TestDay5pt1_example) {
 }
 
 TEST(TestAOC, TestDay5pt2_example) {
-    spdlog::set_level(spdlog::level::debug);
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_5_1.txt";
     const std::vector<int> middle_values{process_file(input_file, '|', ',', true)};
     const std::vector<int> expected{0, 0, 0, 47, 29, 47};
@@ -66,7 +63,6 @@ TEST(TestAOC, TestDay5pt2_example) {
 }
 
 TEST(TestAOC, TestDay5pt1) {
-    spdlog::set_level(spdlog::level::debug);
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_5.txt";
     const std::vector<int> middle_values{process_file(input_file, '|', ',')};
     
@@ -76,7 +72,6 @@ TEST(TestAOC, TestDay5pt1) {
 }
 
 TEST(TestAOC, TestDay5pt2) {
-    spdlog::set_level(spdlog::level::debug);
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_5.txt";
     const std::vector<int> middle_values{process_file(input_file, '|', ',', true)};
     
