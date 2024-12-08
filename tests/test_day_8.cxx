@@ -66,7 +66,25 @@ TEST(TestAOC, TestDay8pt1_example) {
   }
 }
 
-TEST(TestAOC, TestDay8pt2_example) {
+TEST(TestAOC, TestGCF_scenario_1) {
+  const coord test_coord{24, 24};
+  const coord expected{1, 1};
+  ASSERT_EQ(smallest_vector(test_coord), expected);
+}
+
+TEST(TestAOC, TestGCF_scenario_2) {
+  const coord test_coord{48, 24};
+  const coord expected{2, 1};
+  ASSERT_EQ(smallest_vector(test_coord), expected);
+}
+
+TEST(TestAOC, TestGCF_scenario_3) {
+  const coord test_coord{-23, 12};
+  const coord expected{-23, 12};
+  ASSERT_EQ(smallest_vector(test_coord), expected);
+}
+
+TEST(TestAOC, TestDay8pt2_example_1) {
   const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_8_1.txt";
 
   Map communication_network{get_communication_network(input_file)};
@@ -76,17 +94,22 @@ TEST(TestAOC, TestDay8pt2_example) {
       {0, 0},
       {0, 1},
       {0, 6},
-          {0, 11},
+      {0, 11},
       {1, 1},
       {1, 3},
+      {1, 8},
       {2, 2},
       {2, 4},
+      {2, 5},
       {2, 10},
     {3, 2},
     {3, 3},
+    {3, 7},
+    {4, 4},
     {4, 9},
     {5, 1},
     {5, 5},
+    {5, 6},
     {5, 11},
   {6, 3},
   {6, 6},
@@ -94,7 +117,9 @@ TEST(TestAOC, TestDay8pt2_example) {
   {7, 5},
   {7, 7},
   {8, 2},
+  {8, 8},
   {9, 4},
+  {9, 9},
   {10, 1},
   {10, 10},
   {11, 3},
@@ -104,9 +129,75 @@ TEST(TestAOC, TestDay8pt2_example) {
 
   print_map(communication_network);
 
+  ASSERT_EQ(antinodes.size(), 34) << "Test has incorrect antinode value in expected result.";
+
   for(const coord& antinode : antinodes) {
     auto find_antinode = std::find(communication_network.antinodes.begin(), communication_network.antinodes.end(), antinode);
 
     ASSERT_TRUE(find_antinode != communication_network.antinodes.end()) << "Expected antinode at " << antinode.first << "," << antinode.second;
   }
+
+  ASSERT_EQ(antinodes.size(), communication_network.antinodes.size()) << "Number of antinodes " << communication_network.antinodes.size() << " does not match expected " << antinodes.size();
+}
+
+TEST(TestAOC, TestDay8pt2_example_2) {
+  const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_8_2.txt";
+
+  Map communication_network{get_communication_network(input_file)};
+  calculate_antinode_positions(communication_network, true);
+
+  const std::unordered_set<coord> antinodes{
+      {0, 5},
+      {1, 0},
+      {1, 1},
+      {1, 2},
+      {1, 3},
+      {1, 5},
+      {1, 6},
+      {1, 7},
+      {3, 5},
+      {4, 5},
+      {5, 5},
+      {6, 5},
+      {7, 5}
+  };
+
+  print_map(communication_network);
+
+  for(const coord& antinode : antinodes) {
+    auto find_antinode = std::find(communication_network.antinodes.begin(), communication_network.antinodes.end(), antinode);
+
+    ASSERT_TRUE(find_antinode != communication_network.antinodes.end()) << "Expected antinode at " << antinode.first << "," << antinode.second;
+  }
+
+  ASSERT_EQ(antinodes.size(), communication_network.antinodes.size()) << "Number of antinodes " << communication_network.antinodes.size() << " does not match expected " << antinodes.size();
+}
+
+TEST(TestAOC, TestDay8pt2_example_3) {
+  const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_8_3.txt";
+
+  Map communication_network{get_communication_network(input_file)};
+  calculate_antinode_positions(communication_network, true);
+
+  const std::unordered_set<coord> antinodes{
+      {0, 0},
+      {0, 5},
+      {1, 3},
+      {2, 1},
+      {2, 6},
+      {3, 9},
+      {4, 2},
+      {6, 3},
+      {8, 4}
+  };
+
+  print_map(communication_network);
+
+  for(const coord& antinode : antinodes) {
+    auto find_antinode = std::find(communication_network.antinodes.begin(), communication_network.antinodes.end(), antinode);
+
+    ASSERT_TRUE(find_antinode != communication_network.antinodes.end()) << "Expected antinode at " << antinode.first << "," << antinode.second;
+  }
+
+  ASSERT_EQ(antinodes.size(), communication_network.antinodes.size()) << "Number of antinodes " << communication_network.antinodes.size() << " does not match expected " << antinodes.size();
 }

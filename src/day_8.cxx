@@ -1,8 +1,17 @@
 #include "advent_of_code/day_8.hxx"
 #include "spdlog/spdlog.h"
 #include <string>
+#include <numeric>
 
 namespace AdventOfCode24::Day8 {
+    coord smallest_vector(const coord& coordinate) {
+        const coord abs_coord{std::abs(coordinate.first), std::abs(coordinate.second)};
+        const coord dir_vec{(coordinate.first < 0) ? -1 : 1, (coordinate.second < 0) ? -1 : 1};
+
+        const int greatest_common_denominator{std::gcd(coordinate.first, coordinate.second)};
+
+        return {coordinate.first / greatest_common_denominator, coordinate.second / greatest_common_denominator};
+    }
     Map get_communication_network(const std::filesystem::path& input_file) {
         std::ifstream read_in(input_file, std::ios::in);
 		std::string line;
@@ -65,15 +74,29 @@ namespace AdventOfCode24::Day8 {
                     processed.push_back(coord_pair);
                     processed.push_back({pos_2, pos_1});
 
-                    const coord separation{pos_2.first - pos_1.first, pos_2.second - pos_1.second};
-                    const coord rev_separation{-separation.first, -separation.second};
+                    coord separation{pos_2.first - pos_1.first, pos_2.second - pos_1.second};
+                    coord rev_separation{-separation.first, -separation.second};
+
+                    if(resonant_harmonics) {
+                        separation = smallest_vector(separation);
+                        rev_separation = smallest_vector(rev_separation);
+                        communication_network.antinodes.insert(pos_1);
+                        communication_network.antinodes.insert(pos_2);
+                    }
+
                     bool forward_antinode{true}, reverse_antinode{true};
                     bool first_pass{false};
                     int counter{1};
 
                     while(!first_pass || (resonant_harmonics && (forward_antinode || reverse_antinode))) {
-                        const coord candidate_1{pos_2.first + counter * separation.first, pos_2.second + counter * separation.second};
-                        const coord candidate_2{pos_1.first + counter * rev_separation.first, pos_1.second + counter * rev_separation.second};
+                        const coord candidate_1{
+                            pos_2.first + counter * separation.first,
+                            pos_2.second + counter * separation.second
+                        };
+                        const coord candidate_2{
+                            pos_1.first + counter * rev_separation.first,
+                            pos_1.second + counter * rev_separation.second
+                        };
 
                         if(
                             candidate_1.first < communication_network.size.first &&

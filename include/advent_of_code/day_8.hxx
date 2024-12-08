@@ -34,6 +34,7 @@ namespace AdventOfCode24::Day8 {
         Map(const Map& map) : antennae(map.antennae), antinodes(map.antinodes), size(map.size) {}
     };
 
+    coord smallest_vector(const coord& coordinate);
     Map get_communication_network(const std::filesystem::path& input_file);
     void calculate_antinode_positions(Map& communication_network, bool resonant_harmonics);
     void print_map(const Map& communication_network);
