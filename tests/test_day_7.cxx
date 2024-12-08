@@ -27,22 +27,22 @@ TEST(TestAOC, TestDay7pt1_parse_line_pass) {
     };
 
     for(const int& value : allowed) {
-        const long result{check_calibration_line(std::to_string(value) + test_line, false)};
+        const int64_t result{check_calibration_line(std::to_string(value) + test_line, false)};
         ASSERT_EQ(result, value);
     }
 }
 
 TEST(TestAOC, TestDay7pt1_parse_line_fail) {
     const std::string test_line{"10: 2 2 5"};
-    const long result{check_calibration_line(test_line, false)};
+    const int64_t result{check_calibration_line(test_line, false)};
     ASSERT_EQ(result, 0);
 }
 
 TEST(TestAOC, TestDay7pt1_example) {
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_7_1.txt";
 
-    const std::vector<long> calibration_results{process_file(input_file, false)};
-    const std::vector<long> expected_results{true, true, false, false, false, false, false, false, true};
+    const std::vector<int64_t> calibration_results{process_file(input_file, false)};
+    const std::vector<int64_t> expected_results{true, true, false, false, false, false, false, false, true};
 
     ASSERT_EQ(expected_results.size(), calibration_results.size());
 
@@ -62,8 +62,8 @@ TEST(TestAOC, TestDay7pt1_example) {
 TEST(TestAOC, TestDay7pt2_example) {
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_7_1.txt";
 
-    const std::vector<long> calibration_results{process_file(input_file, true)};
-    const std::vector<long> expected_results{true, true, false, true, true, false, true, false, true};
+    const std::vector<int64_t> calibration_results{process_file(input_file, true)};
+    const std::vector<int64_t> expected_results{true, true, false, true, true, false, true, false, true};
 
     ASSERT_EQ(expected_results.size(), calibration_results.size());
 

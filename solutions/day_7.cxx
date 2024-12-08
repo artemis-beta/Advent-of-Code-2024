@@ -22,10 +22,10 @@ int main(int argc, char** argv) {
         throw std::runtime_error("File " + input_file.string() + " does not exist!");
     }
 
-    const std::vector<long> calibration_results{process_file(input_file, false)};
-    const std::vector<long> calibration_results_w_concat{process_file(input_file, true)};
-    const long total = std::accumulate(calibration_results.begin(), calibration_results.end(), 0L);
-    const long total_w_cat = std::accumulate(calibration_results_w_concat.begin(), calibration_results_w_concat.end(), 0L);
+    const std::vector<int64_t> calibration_results{process_file(input_file, false)};
+    const std::vector<int64_t> calibration_results_w_concat{process_file(input_file, true)};
+    const int64_t total = std::accumulate(calibration_results.begin(), calibration_results.end(), 0L);
+    const int64_t total_w_cat = std::accumulate(calibration_results_w_concat.begin(), calibration_results_w_concat.end(), 0L);
 
     spdlog::info("For file '" + input_file.string() + "' the total of successful calibration lines is " + std::to_string(total));
     spdlog::info("With concatenation operator '||' included, the total becomes: " + std::to_string(total_w_cat));
