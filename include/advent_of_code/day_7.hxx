@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <sstream>
 #include <exception>
-#include <string>
 
 #include "spdlog/spdlog.h"
 

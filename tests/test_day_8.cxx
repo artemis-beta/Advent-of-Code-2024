@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
-#include <string>
 #include <unordered_set>
 #include "advent_of_code/day_8.hxx"
-#include "spdlog/common.h"
 #include "spdlog/spdlog.h"
 
 using namespace AdventOfCode24::Day8;

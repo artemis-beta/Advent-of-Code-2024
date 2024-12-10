@@ -1,8 +1,5 @@
 #include <filesystem>
-#include <iostream>
-#include <numeric>
 #include <string>
-#include <set>
 #include "spdlog/spdlog.h"
 
 #include "advent_of_code/day_8.hxx"
