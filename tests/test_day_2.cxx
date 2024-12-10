@@ -50,7 +50,6 @@ TEST(TestAOC, TestDay2pt1_valid) {
 }
 
 TEST(TestAOC, TestDay2pt1_file1) {
-    spdlog::set_level(spdlog::level::debug);
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_2_1.txt";
 
     const std::vector<bool> layer_safety = AdventOfCode24::Day2::check_reactor_safety(input_file, false);
@@ -63,7 +62,6 @@ TEST(TestAOC, TestDay2pt1_file1) {
 }
 
 TEST(TestAOC, TestDay2pt1) {
-    spdlog::set_level(spdlog::level::debug);
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_2.txt";
 
     const std::vector<bool> layer_safety = AdventOfCode24::Day2::check_reactor_safety(input_file, false);
@@ -76,8 +74,6 @@ TEST(TestAOC, TestDay2pt1) {
 }
 
 TEST(TestAOC, TestDay2pt2_file1) {
-    spdlog::set_level(spdlog::level::debug);
-
     std::vector<bool> expected{true, false, false, true, true, true};
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_2_1.txt";
     int index{0};
@@ -99,8 +95,6 @@ TEST(TestAOC, TestDay2pt2_file1) {
 }
 
 TEST(TestAOC, TestDay2pt2_file2) {
-    spdlog::set_level(spdlog::level::debug);
-
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / "day_2_2.txt";
     int index{0};
 
@@ -123,8 +117,6 @@ TEST(TestAOC, TestDay2pt2_file2) {
 }
 
 TEST(TestAOC, TestDay2pt2) {
-    spdlog::set_level(spdlog::level::debug);
-
     std::vector<bool> expected{true, false, false, true, true, true};
     const std::filesystem::path input_file = std::filesystem::path(ADVENT_OF_CODE_DATA) / ".." / ".." / "solutions" / "data" / "day_2.txt";
     int index{0};

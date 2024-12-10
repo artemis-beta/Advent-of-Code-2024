@@ -34,11 +34,11 @@ namespace AdventOfCode24::Day2 {
             values.end(),
             [&overall_trend](int a, int b) {
                 if(a == b || std::abs(a - b) > 3 || std::abs(a - b) < 1){
-                    spdlog::warn("Invalid interval of size " + std::to_string(a - b));
+                    spdlog::debug("Invalid interval of size " + std::to_string(a - b));
                     return true;
                 }
                 if((overall_trend > 0 && a > b) || (overall_trend < 0 && a < b)) {
-                    spdlog::warn("Interval of [" + std::to_string(a) + "," + std::to_string(b) + "] does not match " + ((overall_trend < 0) ? "negative" : "positive") + " trend");
+                    spdlog::debug("Interval of [" + std::to_string(a) + "," + std::to_string(b) + "] does not match " + ((overall_trend < 0) ? "negative" : "positive") + " trend");
                     return true;
                 }
                 return false;
@@ -64,7 +64,7 @@ namespace AdventOfCode24::Day2 {
 
         // If the general trend is zero this is failure
         if(!general_trend) {
-            spdlog::warn("No general direction found.");
+            spdlog::debug("No general direction found.");
             return false;
         }
 
@@ -112,7 +112,7 @@ namespace AdventOfCode24::Day2 {
             spdlog::debug("Line " + std::string((safe_reports[safe_reports.size() - 1]) ? "Passed" : "Failed"));
         }
 
-        spdlog::info("Processed " + std::to_string(safe_reports.size()) + " layers.");
+        spdlog::debug("Processed " + std::to_string(safe_reports.size()) + " layers.");
 
         return safe_reports;
     }
